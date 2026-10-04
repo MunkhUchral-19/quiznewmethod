@@ -91,6 +91,19 @@ const signup = () => {
                             Sign Up
                         </Button>
 
+                        {/* Login button */}
+                        <div className="text-center">
+                            <p className="text-sm text-muted-foreground">
+                                Already have an account?{" "}
+                                <button
+                                    onClick={() => router.push("./login")}
+                                    className="font-medium text-primary hover:underline"
+                                >
+                                    Login
+                                </button>
+                            </p>
+                        </div>
+
                     </div>
 
                     {/* Footer */}

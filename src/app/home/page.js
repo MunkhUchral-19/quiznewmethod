@@ -87,13 +87,14 @@ const home = () => {
             const questionId = response.data[0].id;
 
             for (let j = 0; j < questions[i].answers.length; j++) {
-                const { response } = await supabase
+                const response = await supabase
                     .from("question2_answers")
                     .insert({
                         questionId: questionId,
                         answer: questions[i].answers[j],
                         isCorrect: questions[i].correctIndex === j
-                    });
+                    })
+                    .select("*");
                 console.log(response)
             }
 
@@ -103,8 +104,12 @@ const home = () => {
 
         console.log(response)
         setQuiz("")
+        if (response) {
+            alert("Successuly created")
+        } else (
+            alert("error occured")
+        )
 
-        alert("Successuly created")
     }
 
     console.log(questions)
