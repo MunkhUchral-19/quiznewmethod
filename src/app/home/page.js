@@ -7,8 +7,10 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
+import { useRouter } from "next/navigation"
 
 const home = () => {
+    const router = useRouter();
     const [quiz, setQuiz] = useState("")
     const [questions, setQuestions] = useState([
         {
@@ -116,6 +118,12 @@ const home = () => {
 
     return (
         <div className="min-h-screen bg-muted/40 p-6 md:p-10">
+            <Button
+                variant="outline"
+                onClick={() => router.push("/quiz")}
+            >
+                ← Back to Quizzes
+            </Button>
             <div className="max-w-4xl mx-auto space-y-8">
 
                 {/* Header */}

@@ -19,12 +19,13 @@ const login = () => {
         const { data, error } = await supabase.auth.signInWithPassword({
             email,
             password
+
         })
         if (error) {
             alert("invalid email or password")
             return
         }
-        router.push(`./home`)
+        router.push(`./quiz`)
         console.log(data, error)
     }
     return (
