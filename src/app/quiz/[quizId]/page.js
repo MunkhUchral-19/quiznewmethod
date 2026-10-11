@@ -11,6 +11,7 @@ const page = () => {
     const params = useParams();
     const [questions, setQuestions] = useState([]);
     const [answers, setAnswers] = useState({})
+    const [result, setResult] = useState(null)
 
     useEffect(() => {
         const getQuizQuestions = async () => {
@@ -42,7 +43,14 @@ const page = () => {
                 myPoint = myPoint + questions[i].point;
             }
         }
+        setResult({ totalPoint, myPoint })
         console.log(totalPoint, myPoint)
+    }
+
+    const getAnswerColour = ({ isCorrect, isSelected }) => {
+        if (result && isCorrect) return "border-green-500"
+        if (result && isSelected) return "border-red-500"
+        if (isSelected) return "border-sky-500"
     }
 
     return (
@@ -95,7 +103,12 @@ const page = () => {
                                         <div
                                             key={answer.id}
                                             onClick={() => handleAnswer(question.id, answer.id)}
-                                            className="flex items-center gap-3 border rounded-lg p-4 hover:bg-muted/50 transition-colors cursor-pointer"
+                                            className={`flex items-center gap-3 border border-2 rounded-lg p-4 hover:bg-muted/50 transition-colors cursor-pointer ${getAnswerColour(
+                                                {
+                                                    isCorrect: answer.isCorrect,
+                                                    isSelected: answers[question.id] === answer.id
+                                                }
+                                            )}`}
                                         >
                                             <div className="flex items-center justify-center w-8 h-8 rounded-full border text-sm font-medium">
                                                 {String.fromCharCode(65 + answerIndex)}
@@ -114,7 +127,72 @@ const page = () => {
                 <Button onClick={answer}>
                     Answers
                 </Button>
+                {result && (
+                    <div className="mt-6 rounded-xl border bg-card p-6 shadow-sm">
+                        <div className="mb-5">
+                            <h2 className="text-xl font-bold tracking-tight">
+                                Quiz Results
+                            </h2>
+                            <p className="mt-1 text-sm text-muted-foreground">
+                                Here's how you performed.
+                            </p>
+                        </div>
 
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="rounded-lg border bg-muted/40 p-4">
+                                <p className="text-sm font-medium text-muted-foreground">
+                                    Total Points
+                                </p>
+                                <p className="mt-2 text-3xl font-bold">
+                                    {result.totalPoint}
+                                </p>
+                            </div>
+
+                            <div className="rounded-lg border border-primary/20 bg-primary/5 p-4">
+                                <p className="text-sm font-medium text-muted-foreground">
+                                    Your Points
+                                </p>
+                                <p className="mt-2 text-3xl font-bold text-primary">
+                                    {result.myPoint}
+                                    <span className="ml-1 text-base font-normal text-muted-foreground">
+                                        / {result.totalPoint}
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="mt-5">
+                            <div className="mb-2 flex items-center justify-between text-sm">
+                                <span className="text-muted-foreground">Your score</span>
+                                <span className="font-semibold">
+                                    {result.totalPoint > 0
+                                        ? Math.round(
+                                            (result.myPoint / result.totalPoint) * 100
+                                        )
+                                        : 0}%
+                                </span>
+                            </div>
+
+                            <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
+                                <div
+                                    className="h-full rounded-full bg-primary transition-all duration-500"
+                                    style={{
+                                        width: `${result.totalPoint > 0
+                                            ? Math.min(
+                                                100,
+                                                Math.max(
+                                                    0,
+                                                    (result.myPoint / result.totalPoint) * 100
+                                                )
+                                            )
+                                            : 0
+                                            }%`,
+                                    }}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     )
