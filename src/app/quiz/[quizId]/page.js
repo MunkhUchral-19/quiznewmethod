@@ -13,6 +13,8 @@ const page = () => {
     const [answers, setAnswers] = useState({})
     const [result, setResult] = useState(null)
 
+    const quizId = params.quizId;
+
     useEffect(() => {
         const getQuizQuestions = async () => {
             const response = await supabase.from("quiz2_questions").select("*, question2_answers(*)").eq("quizId", params.quizId);
@@ -28,7 +30,7 @@ const page = () => {
 
     console.log(answers, "gg")
 
-    const answer = () => {
+    const answer = async () => {
         let totalPoint = 0;
         let myPoint = 0;
 
@@ -45,6 +47,28 @@ const page = () => {
         }
         setResult({ totalPoint, myPoint })
         console.log(totalPoint, myPoint)
+
+        const { data } = await supabase
+            .from("quiz_attempts")
+            .insert({
+                quizId: quizId,
+                totalScore: totalPoint,
+                score: myPoint,
+            })
+            .select("*");
+
+        const attemptId = data[0].id;
+
+        for (let i = 0; i < questions.length; i++) {
+            const correctAnswer = questions[i].question2_answers.find((answer) => {
+                return answer.isCorrect;
+            });
+            await supabase.from("quiz_attempts_answer").insert({
+                attemptId: attemptId,
+                answerId: answers[questions[i].id],
+                isCorrect: correctAnswer.id === answers[questions[i]],
+            });
+        }
     }
 
     const getAnswerColour = ({ isCorrect, isSelected }) => {
