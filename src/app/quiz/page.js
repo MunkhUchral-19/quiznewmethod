@@ -25,12 +25,22 @@ const quiz = () => {
 
     return (
         <div className="min-h-screen bg-muted/40 p-6 md:p-10">
-            <Button
-                variant="outline"
-                onClick={() => router.push("/home")}
-            >
-                Create New Quiz
-            </Button>
+            <div className="flex justify-between gap-3 mb-6">
+                <Button
+                    variant="outline"
+                    onClick={() => router.push("/home")}
+                >
+                    Create New Quiz
+                </Button>
+
+                <Button
+                    variant="outline"
+                    onClick={() => router.push("/history")}
+                >
+                    History
+                </Button>
+            </div>
+
             <div className="max-w-4xl mx-auto space-y-8">
 
                 {/* Header */}
@@ -103,7 +113,7 @@ const quiz = () => {
                 )}
 
             </div>
-        </div>
+        </div >
     )
 }
 

@@ -28,7 +28,7 @@ const page = () => {
         setAnswers({ ...answers, [questionId]: answerId })
     }
 
-    console.log(answers, "gg")
+    // console.log(answers, "gg")
 
     const answer = async () => {
         let totalPoint = 0;
@@ -46,7 +46,6 @@ const page = () => {
             }
         }
         setResult({ totalPoint, myPoint })
-        console.log(totalPoint, myPoint)
 
         const { data } = await supabase
             .from("quiz_attempts")
@@ -63,12 +62,14 @@ const page = () => {
             const correctAnswer = questions[i].question2_answers.find((answer) => {
                 return answer.isCorrect;
             });
-            await supabase.from("quiz_attempts_answer").insert({
+            const { data, error } = await supabase.from("quiz_attempts_answer").insert({
                 attemptId: attemptId,
                 answerId: answers[questions[i].id],
                 isCorrect: correctAnswer.id === answers[questions[i]],
             });
+            console.log(data, error)
         }
+
     }
 
     const getAnswerColour = ({ isCorrect, isSelected }) => {
@@ -76,6 +77,11 @@ const page = () => {
         if (result && isSelected) return "border-red-500"
         if (isSelected) return "border-sky-500"
     }
+
+
+
+
+
 
     return (
         <div className="min-h-screen bg-muted/40 p-6 md:p-10">
